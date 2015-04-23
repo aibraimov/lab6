@@ -1,0 +1,30 @@
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+require 'sneakers/tasks'
+require File.expand_path('../config/application', __FILE__)
+
+Intrade::Application.load_tasks
+
+# config/Rakefile
+namespace :rabbitmq do
+  desc "Setup routing"
+  task :setup do
+    require "bunny"
+
+    conn = Bunny.new
+    conn.start
+
+    ch = conn.create_channel
+
+    # get or create exchange
+    x = ch.fanout("lab5.calcs")
+
+    # get or create queue (note the durable setting)
+    queue = ch.queue("dashboard.calcs", durable: true)
+
+    # bind queue to exchange
+    queue.bind("lab5.calcs")
+
+    conn.close
+  end
+end

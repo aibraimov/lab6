@@ -1,0 +1,48 @@
+<% 
+#Publisher.publish("posts", "exponentiation" , "41")
+%>
+<div style="width: 400px; margin: 0 auto;">
+	<select name="type" style="float: left">
+		<option value="factorization">Factorization</option>
+		<option value="is_prime">Is Prime</option>
+		<option value="factorial">Factorial</option>
+		<option value="exponentiation">Exponentiation</option>
+	</select>
+	<br><br>
+	<input id="val1" name="value" placeholder="Enter your value" style="float: left" type="number">
+	<input id="hid" name="value1" placeholder="Enter second value" style="float: left; visibility: hidden" type="number">
+	<br><br><br>
+	<button id="sub">Submit</button>
+	<br><br>
+	<label>Answer: </label>
+	<div id="answer"></div>
+</div>
+<script>
+	$(document).ready(function(){
+		$("select").change(function(){
+			var val = $(this).val()
+			if (val == 'exponentiation')
+			{
+				$("#hid").css('visibility', 'visible')
+			}
+			else
+			{
+				$("#hid").css('visibility', 'hidden')
+			}
+		});
+		$("#sub").click(function(){
+			var type = $("select").val();
+			var val1 = $("#val1").val();
+			var val2 = $("#hid").val();
+			$.ajax({
+			  method: "POST",
+			  url: "/lab5",
+			  dataType: "json",
+			  data: { type: type, value: val1, value1: val2 }
+			})
+			.success(function(data){
+				$("#answer").html(data.status)
+			});
+		});
+	});
+</script>

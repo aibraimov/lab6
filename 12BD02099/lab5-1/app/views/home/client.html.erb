@@ -1,0 +1,22 @@
+<div style="width: 400px; margin: 0 auto;">
+	<input id="site" name="site" placeholder="Enter web site address" style="float: left" type="text">
+	<br><br><br>
+	<button id="sub">Submit</button>
+</div>
+<script>
+	$(document).ready(function(){
+		$("#sub").click(function(){
+			var val = $("#site").val();
+			$.ajax({
+			  method: "POST",
+			  url: "http://localhost:3000/sis",
+			  dataType: "json",
+			  data: { val: val }
+			})
+			.success(function(data){
+			    document.getElementById('my_iframe').src = "/assets/"+val+"/"+val+".zip";
+			});
+		});
+	});
+</script>
+<iframe id="my_iframe" style='display: none;'></iframe>
